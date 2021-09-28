@@ -1,23 +1,43 @@
 from colour import Color
-import GradientGen.TermGradient
 
 
 class PrintGradient(object):
     def __init__(self, start: str, end: str, message: str) -> None:
         self.message = message
         gradient = self.generate_gradient(start, end)
-        self.print(gradient)
+        print(gradient)
 
     def generate_gradient(self, start: str, end: str) -> str:
         gradient = ""
 
         start = Color(start)
-        colors = list(start.range_to(Color(end), len(self.message.split("\n"))))
+        colors = list(start.range_to(Color(end), count_real_characters(self.message)))
 
-        for c in colors:
-            gradient += f"{int(c.rgb[0] * 256)}:{int(c.rgb[1] * 256)}:{int(c.rgb[2] * 256)}\n"
+        for m in list(self.message):
+            if m == "\n":
+                gradient += "\n"
+            elif m == "\r":
+                gradient += "\r"
+            elif m == " ":
+                gradient += " "
+            else:
+                c = colors[0]
+                r = int(c.rgb[0] * 256)
+                g = int(c.rgb[1] * 256)
+                b = int(c.rgb[2] * 256)
+                gradient += f"\033[38;2;{r};{g};{b}m{m}"
+                colors.remove(c)
 
         return gradient
 
-    def print(self, gradient: str) -> None:
-        TermGradient.print_gradient(gradient, self.message)
+
+def count_real_characters(message: str) -> int:
+    count = 0
+
+    split = list(message)
+
+    for c in split:
+        if c != " " and c != "\n" and c != "\r":
+            count += 1
+
+    return count
