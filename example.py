@@ -1,4 +1,5 @@
 from GradientGen import PrintGradient
+from os import system
 
 
 title = r"""      _________ __                           __  ___  ______
@@ -8,5 +9,6 @@ title = r"""      _________ __                           __  ___  ______
     /_________/|__\___  /|__|_|__/_____/ /_/  /_/  \____/   
                  /_____/                  """
 
-PrintGradient("#25e2d9", "#15ed18", f"{title}\n")
+system('cls') # the best way to get ascii escape codes to work on windows is to clear the console
+PrintGradient("#25e2d9", "#15ed18", title)
 input()
